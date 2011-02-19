@@ -1,0 +1,31 @@
+
+
+* : Primary Key
+- : Foreign Key
+
+Table: expense
+--------------
+* key (number, system generated sequence)
+  insert_datetime
+  last_updated_datetime
+  date_incurred
+  amount (currentcy)
+- category_code (
+  desc (description)
+
+Table: category 
+--------------
+* code (user defined code for this expense category))
+  desc (description)
+- parent_code (to facilitate hierarchies of expense categories, will be "NONE" if top-level)
+
+
+Table: info 
+--------------
+* key (number, system generated sequence, will only be 1)
+  desc (description of this software)
+  major_version
+  minor_version
+
+NOTE: only one (1) record intended for the "info" table.
+
