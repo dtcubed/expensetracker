@@ -1,0 +1,18 @@
+
+Client
+------
+This can have direct access to the RDBMS server for Read operations,
+but should go through the Middleware for Create, Update, and Delete
+operations.
+
+Middleware
+----------
+Available as a network "server". Handles requests for Create, Update,
+and Delete operations to the RDBMS Server.
+
+
+RDBMS Server
+------------
+Contains RDBMS tables for: expense, category, and info.
+
+
