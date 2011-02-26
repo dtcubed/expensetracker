@@ -22,22 +22,84 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 #  THE SOFTWARE.
 #############################################################################
+# NOTE: Major portions of the original basis for this server code were
+#       obtained through public examples of TCP Server code from:
+#       http://docs.python.com for Python 2.7.1. Those portions would
+#       not be encumbered by any type of Copyright by "dtcubed". As time
+#       goes on, it is anticipated that more customization will occur
+#       in relation to this TCP Server code.
+#
+# TODO: Ensure that this TCP Server code is being driven over encrypted
+#       communications paths before "going live" with real use. Look into
+#       something like OpenSSL or TCPWrappers.
+#############################################################################
 import json
 import os
-
+import socket
+import threading
+import time
+import SocketServer
 from sys import argv, exit
 
-def main():
+#####
+# NOTE: Play around with this handler for awhile, but consider the "streams"
+# example handler if and when it becomes apparent that 1024 is not enough.
+# Thinking of a file upload message type here.
+#####
+
+class ThreadedTCPRequestHandler(SocketServer.BaseRequestHandler):
+
+    def handle(self):
+        data = self.request.recv(1024)
+        cur_thread = threading.currentThread()
+        response = "%s: %s" % (cur_thread.getName(), data)
+        self.request.send(response)
+
+class ThreadedTCPServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
+    pass
+
+if __name__ == "__main__":
     #####
     # Open the JSON config file passed in as the 1st argument and read the contents
     # into a Python dictionary object named "config".
     #####
-    config_file = file(argv[1], 'r')
-    config = json.load(config_file)
-    config_file.close()
+    #config_file = file(argv[1], 'r')
+    #config = json.load(config_file)
+    #config_file.close()
 
-if __name__ == '__main__':
-    main()
+    HOST, PORT = "localhost", 13131
+
+    server = ThreadedTCPServer((HOST, PORT), ThreadedTCPRequestHandler)
+    ip, port = server.server_address
+
+    #####
+    # NOTE: Comments from original Python docs example.
+    # Start a thread with the server -- that thread will then start one
+    # more thread for each request
+    #####
+    server_thread = threading.Thread(target=server.serve_forever)
+    #####
+    # NOTE: Comments from original Python docs example.
+    # Exit the server thread when the main thread terminates
+    #####
+    server_thread.setDaemon(True)
+    server_thread.start()
+    print "Server loop running in thread:", server_thread.getName()
+
+    #####
+    # Forever loop.
+    #####
+    my_counter = 0
+    while True:
+        my_counter += 1
+        if ((my_counter % 100) == 0):
+            print "Still True"
+            my_counter = 0
+        time.sleep(1)
+    
+    #####
+    # server.shutdown()
+    #####
 
 #############################################################################
 #############################################################################
