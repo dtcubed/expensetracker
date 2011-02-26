@@ -4,4 +4,8 @@ expenses are tracking against their current monthly or yearly budget.
 
 02) Allow for tracking of "multiple books" from same ET infrastructure.
 
+03) Revisit: http://docs.python.org/library/socketserver.html and see
+    if I need to implement a "stream" handler for the ET server.
+    This might be critical for protocol interactions that require
+    moving of more than 1024 bytes during one exchange.
 
