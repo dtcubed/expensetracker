@@ -5,15 +5,18 @@ more expense records. Then, after some unique information has been
 prepended onto the front of the file, SSH will be utilized to SCP
 the file to the proper place on the expense server.
 
-Expense Server
----------------
-There will be some daemon code running on the Expense Server.
-This code will pick up the expense record file(s) and INSERT them
-into the RDBM.
+Expense Tracker Command Server (ETCS)
+-------------------------------------
+This will be a server (threaded or forking) which implements the
+ETCS protocol. Some anticipated "commands":
 
-Actually, it is envisioned that this daemon code be responsible
-for processing all files which lead to Create, Update, and Delete
-operation against the RDBMS.
+"request transaction code" - returns unique (enough) transaction code
+  to build a directory path for further processing.
+
+"process file" - processes file that Expense Tracker understands.
+
+It is envisioned that any code which leads to Create (e.g. INSERT), 
+Update, or Delete operations will get invoked via ETCS.
 
 Web Application 
 ----------------
@@ -27,8 +30,27 @@ user can:
 
 Some Architectual Pieces
 ------------------------
+-- Dynamic DNS Script
+-- ETCS (encrypted for good measure)
 -- RDBMS (will probably start out with SQLite, but consider going to something like Postgres later)
 -- SSH Client
 -- SSH Server
 -- Web Server (HTTPS)
+
+Rough Expense Submission Protocol
+---------------------------------
+1 - Client issues "requests transaction code" to ETCS.
+    a) Transaction code is generated. 
+    b) Offset directory from $ET_BASEDIR is made. 
+    c) Transaction code is returned. 
+
+2 - Client SCPs "exp.dat" to $ET_BASEDIR/<transaction_code>><possible_heuristic_bits>/et.dat
+    a) OK is returned.
+
+3 - Client issues "process file" to the ET Command Server
+    a) Returns status code
+
+Transaction Code
+----------------
+-- Something like this: YYYYMMDDHHMMSS-Random()-ThreadID should work.
 

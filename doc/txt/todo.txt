@@ -2,4 +2,6 @@
 01) Add a mechanism whereby a user could determine how their current
 expenses are tracking against their current monthly or yearly budget.
 
+02) Allow for tracking of "multiple books" from same ET infrastructure.
+
 
