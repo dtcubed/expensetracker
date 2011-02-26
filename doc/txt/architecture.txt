@@ -1,18 +1,34 @@
-
 Client
 ------
-This can have direct access to the RDBMS server for Read operations,
-but should go through the Middleware for Create, Update, and Delete
-operations.
+Will merely build up a properly formed file consisting of one (1) or
+more expense records. Then, after some unique information has been
+prepended onto the front of the file, SSH will be utilized to SCP
+the file to the proper place on the expense server.
 
-Middleware
-----------
-Available as a network "server". Handles requests for Create, Update,
-and Delete operations to the RDBMS Server.
+Expense Server
+---------------
+There will be some daemon code running on the Expense Server.
+This code will pick up the expense record file(s) and INSERT them
+into the RDBM.
 
+Actually, it is envisioned that this daemon code be responsible
+for processing all files which lead to Create, Update, and Delete
+operation against the RDBMS.
 
-RDBMS Server
-------------
-Contains RDBMS tables for: expense, category, and info.
+Web Application 
+----------------
+Eventually, there will be a web application (HTTPS) from which the
+user can:
+-- Conduct Read operations against the RDBMS.
+-- Correct expense category information.
+-- Upload files of expense records.
+-- Split expenses, update expense comments and categorization.
+-- Run reports, etc.
 
+Some Architectual Pieces
+------------------------
+-- RDBMS (will probably start out with SQLite, but consider going to something like Postgres later)
+-- SSH Client
+-- SSH Server
+-- Web Server (HTTPS)
 
