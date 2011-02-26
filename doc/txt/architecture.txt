@@ -54,3 +54,9 @@ Transaction Code
 ----------------
 -- Something like this: YYYYMMDDHHMMSS-Random()-ThreadID should work.
 
+Maybe, something more extensive like this:
+
+YYYYMMDDHHMMSSmmm-ProcessID-ThreadID-Random(). Very unlikely to be collisions then.
+
+where "mmm" is the padded Millisecond value.
+
