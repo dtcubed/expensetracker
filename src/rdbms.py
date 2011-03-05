@@ -40,6 +40,7 @@ def create_et_db_if_necessary(db_name):
         cursor.execute(create_table_sql('expense'))
         cursor.execute(create_table_sql('info'))
         connection.commit()
+        insert_into_info(db_name, 'ExpenseTracker', '0', '1')
     else:    
         print 'database:[', db_name, '] exists'
 #############################################################################
@@ -58,44 +59,41 @@ def create_table_sql(table_name):
     elif table_name == 'info': 
         sql =  'CREATE TABLE info '
         sql += '(id INTEGER PRIMARY KEY AUTOINCREMENT, '
-        sql += 'desc STRING NOT NULL, major_version STRING NOT NULL, '
+        sql += 'name STRING NOT NULL, '
+        sql += 'major_version STRING NOT NULL, '
         sql += 'minor_version STRING NOT NULL)'
     else:
         sql = 'INVALID'
 
     return sql
 #############################################################################
-def insert_into_names(db_name, name, email):
+def insert_into_info(db_name, name, major, minor):
 
     if os.path.isfile(db_name):
         connection = sqlite.connect(db_name)
         cursor = connection.cursor()
-        cursor.execute('INSERT INTO names VALUES (null, ?, ?)', (name, email))
+        cursor.execute('INSERT INTO info VALUES (null, ?, ?, ?)', (name, major, minor))
         connection.commit()
 #############################################################################
-def print_all_names(db_name):
+def print_all_info(db_name):
 
     if os.path.isfile(db_name):
         connection = sqlite.connect(db_name)
         cursor = connection.cursor()
-        cursor.execute('SELECT * FROM names')
+        cursor.execute('SELECT * FROM info')
         for row in cursor:
-           print '-'*10
-           print 'ID:', row[0]
-           print 'Name:', row[1]
-           print 'E-Mail:', row[2]
-           print '-'*10   
+           print '-'*50
+           print 'id:', row[0]
+           print 'name:', row[1]
+           print 'major_ver:', row[2]
+           print 'minor_ver:', row[3]
+           print '-'*50   
 
 #############################################################################
-def routine_03():
-    print 'routine_03'
-
 if __name__ == "__main__":
     #####
     # Create the database if necessary.
     #####
     create_et_db_if_necessary('expense.db')
-#    insert_into_names('expense.db', 'john', 'john@gmail')
-#    insert_into_names('expense.db', 'frank', 'frank@gmail')
-#    print_all_names('expense.db')
+    print_all_info('expense.db')
 #############################################################################
