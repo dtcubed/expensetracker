@@ -40,7 +40,8 @@ def create_et_db_if_necessary(db_name):
         cursor.execute(create_table_sql('expense'))
         cursor.execute(create_table_sql('info'))
         connection.commit()
-        insert_into_info(db_name, 'ExpenseTracker', '0', '1')
+        connection.close()
+        insert_info(db_name, 'ExpenseTracker', '0', '1')
     else:    
         print 'database:[', db_name, '] exists'
 #############################################################################
@@ -54,6 +55,7 @@ def create_table_sql(table_name):
     elif table_name == 'expense': 
         sql =  'CREATE TABLE expense '
         sql += '(id INTEGER PRIMARY KEY AUTOINCREMENT, '
+        sql += 'amount REAL, '
         sql += 'category_code STRING, '
         sql += 'desc STRING NOT NULL)'
     elif table_name == 'info': 
@@ -67,13 +69,25 @@ def create_table_sql(table_name):
 
     return sql
 #############################################################################
-def insert_into_info(db_name, name, major, minor):
+def insert_expense(db_name, amount, category_code, desc):
+
+    if os.path.isfile(db_name):
+        sql =  'INSERT INTO expense VALUES '
+        sql += '(null, ?, ?, ?)'
+        connection = sqlite.connect(db_name)
+        cursor = connection.cursor()
+        cursor.execute(sql, (amount, category_code, desc))
+        connection.commit()
+        connection.close()
+#############################################################################
+def insert_info(db_name, name, major, minor):
 
     if os.path.isfile(db_name):
         connection = sqlite.connect(db_name)
         cursor = connection.cursor()
         cursor.execute('INSERT INTO info VALUES (null, ?, ?, ?)', (name, major, minor))
         connection.commit()
+        connection.close()
 #############################################################################
 def print_all_info(db_name):
 
@@ -88,6 +102,7 @@ def print_all_info(db_name):
            print 'major_ver:', row[2]
            print 'minor_ver:', row[3]
            print '-'*50   
+        connection.close()
 
 #############################################################################
 if __name__ == "__main__":
@@ -96,4 +111,5 @@ if __name__ == "__main__":
     #####
     create_et_db_if_necessary('expense.db')
     print_all_info('expense.db')
+    insert_expense('expense.db', 13.13, 'AUTO', 'Muffler Repair')
 #############################################################################
