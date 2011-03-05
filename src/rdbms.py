@@ -27,21 +27,43 @@ import os.path
 from sqlite3 import dbapi2 as sqlite
 
 #############################################################################
-def create_expense_db_if_necessary(db_name):
+def create_et_db_if_necessary(db_name):
 
     #####
-    # Only create database if the database file doesn't already exist.
+    # Only create database if it doesn't already exist.
     #####
     if not os.path.isfile(db_name):
-        print 'creating expense db .............'
+        print 'creating database:[', db_name, ']'
         connection = sqlite.connect(db_name)
         cursor = connection.cursor()
-        cursor.execute('CREATE TABLE info (id INTEGER PRIMARY KEY AUTOINCREMENT, desc STRING NOT NULL, major_version STRING NOT NULL, minor_version STRING NOT NULL)')
-        cursor.execute('CREATE TABLE entries (id INTEGER PRIMARY KEY AUTOINCREMENT, title STRING NOT NULL, text STRING NOT NULL)')
-        cursor.execute('CREATE TABLE names (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(50), email VARCHAR(50))')
+        cursor.execute(create_table_sql('category'))
+        cursor.execute(create_table_sql('expense'))
+        cursor.execute(create_table_sql('info'))
         connection.commit()
     else:    
-        print 'expense db exists, do nothing'
+        print 'database:[', db_name, '] exists'
+#############################################################################
+def create_table_sql(table_name):
+
+    if table_name == 'category': 
+        sql =  'CREATE TABLE category '
+        sql += '(code STRING NOT NULL, '
+        sql += 'desc STRING NOT NULL, '
+        sql += 'parent_code STRING NOT NULL)'
+    elif table_name == 'expense': 
+        sql =  'CREATE TABLE expense '
+        sql += '(id INTEGER PRIMARY KEY AUTOINCREMENT, '
+        sql += 'category_code STRING, '
+        sql += 'desc STRING NOT NULL)'
+    elif table_name == 'info': 
+        sql =  'CREATE TABLE info '
+        sql += '(id INTEGER PRIMARY KEY AUTOINCREMENT, '
+        sql += 'desc STRING NOT NULL, major_version STRING NOT NULL, '
+        sql += 'minor_version STRING NOT NULL)'
+    else:
+        sql = 'INVALID'
+
+    return sql
 #############################################################################
 def insert_into_names(db_name, name, email):
 
@@ -68,13 +90,12 @@ def print_all_names(db_name):
 def routine_03():
     print 'routine_03'
 
-
 if __name__ == "__main__":
     #####
     # Create the database if necessary.
     #####
-    create_expense_db_if_necessary('expense.db')
-    insert_into_names('expense.db', 'john', 'john@gmail')
-    insert_into_names('expense.db', 'frank', 'frank@gmail')
-    print_all_names('expense.db')
+    create_et_db_if_necessary('expense.db')
+#    insert_into_names('expense.db', 'john', 'john@gmail')
+#    insert_into_names('expense.db', 'frank', 'frank@gmail')
+#    print_all_names('expense.db')
 #############################################################################
