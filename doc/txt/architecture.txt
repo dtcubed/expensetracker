@@ -59,4 +59,17 @@ Maybe, something more extensive like this:
 YYYYMMDDHHMMSSmmm-ProcessID-ThreadID-Random(). Very unlikely to be collisions then.
 
 where "mmm" is the padded Millisecond value.
+ 
+Priciples To Follow
+--------------------
+DRY - Don't Repeat Yourself
+http://en.wikipedia.org/wiki/DRY
+
+KISS - Keep It Simple Stupid 
+http://en.wikipedia.org/wiki/KISS_principle 
+
+"Premature optimization is the root of all evil." (Donald Knuth's maxim)
+
+YAGNI - You Ain't Gonna Need It
+http://en.wikipedia.org/wiki/You_Ain't_Gonna_Need_It
 
