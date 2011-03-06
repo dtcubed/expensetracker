@@ -25,7 +25,6 @@
 import os.path
 
 from sqlite3 import dbapi2 as sqlite
-
 #############################################################################
 def create_et_db_if_necessary(db_name):
 
@@ -89,7 +88,22 @@ def insert_info(db_name, name, major, minor):
         connection.commit()
         connection.close()
 #############################################################################
-def print_all_info(db_name):
+def print_expense(db_name):
+
+    if os.path.isfile(db_name):
+        connection = sqlite.connect(db_name)
+        cursor = connection.cursor()
+        cursor.execute('SELECT * FROM expense')
+        for row in cursor:
+           print '-'*50
+           print 'id:', row[0]
+           print 'amount:', row[1]
+           print 'category_code:', row[2]
+           print 'desc:', row[3]
+           print '-'*50   
+        connection.close()
+#############################################################################
+def print_info(db_name):
 
     if os.path.isfile(db_name):
         connection = sqlite.connect(db_name)
@@ -103,13 +117,15 @@ def print_all_info(db_name):
            print 'minor_ver:', row[3]
            print '-'*50   
         connection.close()
-
 #############################################################################
 if __name__ == "__main__":
     #####
     # Create the database if necessary.
     #####
     create_et_db_if_necessary('expense.db')
-    print_all_info('expense.db')
+    #print_info('expense.db')
     insert_expense('expense.db', 13.13, 'AUTO', 'Muffler Repair')
+    insert_expense('expense.db', 14.14, 'FOOD', 'Cub Foods')
+    insert_expense('expense.db', 15.15, 'CLOTHING', 'Target')
+    print_expense('expense.db')
 #############################################################################
