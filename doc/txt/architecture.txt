@@ -70,6 +70,9 @@ http://en.wikipedia.org/wiki/KISS_principle
 
 "Premature optimization is the root of all evil." (Donald Knuth's maxim)
 
+Unix philosophy
+http://en.wikipedia.org/wiki/Unix_philosophy
+
 YAGNI - You Ain't Gonna Need It
 http://en.wikipedia.org/wiki/You_Ain't_Gonna_Need_It
 
