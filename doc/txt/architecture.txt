@@ -32,7 +32,7 @@ Some Architectual Pieces
 ------------------------
 -- Dynamic DNS Script
 -- ETCS (encrypted for good measure)
--- RDBMS (will probably start out with SQLite, but consider going to something like Postgres later)
+-- RDBMS (will probably start out with SQLite, but consider going to something like PostgreSQL later)
 -- SSH Client
 -- SSH Server
 -- Web Server (HTTPS)
