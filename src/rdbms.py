@@ -22,6 +22,10 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 #  THE SOFTWARE.
 #############################################################################
+# TODO: Read the contents off of this link:
+# http://www.doughellmann.com/PyMOTW/sqlite3/
+# Determine how to shift this code around if necessary.
+#####
 import os.path
 
 from sqlite3 import dbapi2 as sqlite
@@ -48,21 +52,21 @@ def create_table_sql(table_name):
 
     if table_name == 'category': 
         sql =  'CREATE TABLE category '
-        sql += '(code STRING NOT NULL, '
-        sql += 'desc STRING NOT NULL, '
-        sql += 'parent_code STRING NOT NULL)'
+        sql += '(code TEXT NOT NULL, '
+        sql += 'desc TEXT NOT NULL, '
+        sql += 'parent_code TEXT NOT NULL)'
     elif table_name == 'expense': 
         sql =  'CREATE TABLE expense '
         sql += '(id INTEGER PRIMARY KEY AUTOINCREMENT, '
         sql += 'amount REAL, '
-        sql += 'category_code STRING, '
-        sql += 'desc STRING NOT NULL)'
+        sql += 'category_code TEXT, '
+        sql += 'desc TEXT NOT NULL)'
     elif table_name == 'info': 
         sql =  'CREATE TABLE info '
         sql += '(id INTEGER PRIMARY KEY AUTOINCREMENT, '
-        sql += 'name STRING NOT NULL, '
-        sql += 'major_version STRING NOT NULL, '
-        sql += 'minor_version STRING NOT NULL)'
+        sql += 'name TEXT NOT NULL, '
+        sql += 'major_version TEXT NOT NULL, '
+        sql += 'minor_version TEXT NOT NULL)'
     else:
         sql = 'INVALID'
 
