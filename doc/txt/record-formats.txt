@@ -1,0 +1,28 @@
+To follow the KISS principle and facilitate interoperability with other applications, 
+we will use Comma Separated Values (CSV) for our transaction files. 
+
+Here are the record formats:
+
+----------------
+INSERT, expense
+----------------
+I,E,<incurred_date>,<amount>,<category_code>,<desc>
+
+Where:
+<incurred_date> - Format YYYY-MM-DD (mandatory).
+<amount> - Real number with up to two (2) decimal places (mandatory).
+<category_code> - Foreign key from the "category" table (mandatory, use "NONE" to defer categorization).
+<desc> - Textual description of the expense (optional).
+
+-----------------
+INSERT, category
+-----------------
+I,C,<code>,<parent_code>,<desc>
+
+Where:
+<code> - User defined code for this expense category (mandatory).
+<parent_code> - Keys back into the category table (optional, can be "NULL").
+<desc> - Textual description of the expense (optional).
+
+
+
