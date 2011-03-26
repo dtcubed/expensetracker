@@ -101,7 +101,6 @@ def is_valid_YYYYMMDD(proposed_datestamp):
 #############################################################################
 def main():
     sqlite_db = argv[1]
-
     #####
     # Before continuing, check for existence.
     #####
@@ -110,7 +109,6 @@ def main():
         exit()
 
     transactions_file = argv[2]
-
     #####
     # Before continuing, check for existence.
     #####
@@ -124,13 +122,18 @@ def main():
     # Each row is really a list of strings as parsed by the csv reader.
     #####
     for transactionRecord in transactionReader:
-        if is_valid_insert_expense_record(transactionRecord):
-            print "TRUE, the transaction record is VALID"
+        #####
+        # INSERT record.
+        #####
+        if transactionRecord[0] == 'I':
+            if transactionRecord[1] == 'C':
+                print "INSERT->Category"
+            elif transactionRecord[1] == 'E':
+                print "INSERT->Expense"
 
 #############################################################################
 if __name__ == '__main__':
     main()
-
 #############################################################################
 #############################################################################
 #############################################################################
