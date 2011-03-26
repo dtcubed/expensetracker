@@ -29,6 +29,8 @@
 import os.path
 
 from sqlite3 import dbapi2 as sqlite
+
+from et_validations import is_valid_amount, is_valid_YYYYMMDD
 #############################################################################
 def create_et_db_if_necessary(db_name):
 
@@ -52,14 +54,15 @@ def create_table_sql(table_name):
 
     if table_name == 'category': 
         sql =  'CREATE TABLE category '
-        sql += '(code TEXT NOT NULL, '
+        sql += '(code TEXT PRIMARY KEY, '
         sql += 'desc TEXT NOT NULL, '
         sql += 'parent_code TEXT NOT NULL)'
     elif table_name == 'expense': 
         sql =  'CREATE TABLE expense '
         sql += '(id INTEGER PRIMARY KEY AUTOINCREMENT, '
-        sql += 'amount REAL, '
-        sql += 'category_code TEXT, '
+        sql += 'incurred_date TEXT NOT NULL, '
+        sql += 'amount REAL NOT NULL, '
+        sql += 'category_code TEXT NOT NULL, '
         sql += 'desc TEXT NOT NULL)'
     elif table_name == 'info': 
         sql =  'CREATE TABLE info '
@@ -72,16 +75,45 @@ def create_table_sql(table_name):
 
     return sql
 #############################################################################
-def insert_expense(db_name, amount, category_code, desc):
+def insert_category(db_name, code, desc, parent_code):
+
+    if os.path.isfile(db_name):
+        sql =  'INSERT INTO category VALUES '
+        sql += '(?, ?, ?)'
+        connection = sqlite.connect(db_name)
+        cursor = connection.cursor()
+        cursor.execute(sql, (code, desc, parent_code))
+        connection.commit()
+        connection.close()
+#############################################################################
+def insert_category_transaction(db_name, transaction):
+
+    code = transaction[2]
+    parent_code = transaction[3]
+    desc = transaction[4]
+
+    insert_category(db_name, code, desc, parent_code)
+#############################################################################
+def insert_expense(db_name, incurred_date, amount, category_code, desc):
 
     if os.path.isfile(db_name):
         sql =  'INSERT INTO expense VALUES '
-        sql += '(null, ?, ?, ?)'
+        sql += '(null, ?, ?, ?, ?)'
         connection = sqlite.connect(db_name)
         cursor = connection.cursor()
-        cursor.execute(sql, (amount, category_code, desc))
+        cursor.execute(sql, (incurred_date, amount, category_code, desc))
         connection.commit()
         connection.close()
+#############################################################################
+def insert_expense_transaction(db_name, transaction):
+
+    incurred_date = transaction[2]
+    amount = transaction[3]
+    category_code = transaction[4]
+    desc = transaction[5]
+
+    insert_expense(db_name, incurred_date, amount, category_code, desc)
+    
 #############################################################################
 def insert_info(db_name, name, major, minor):
 
@@ -128,8 +160,8 @@ if __name__ == "__main__":
     #####
     create_et_db_if_necessary('expense.db')
     #print_info('expense.db')
-    insert_expense('expense.db', 13.13, 'AUTO', 'Muffler Repair')
-    insert_expense('expense.db', 14.14, 'FOOD', 'Cub Foods')
-    insert_expense('expense.db', 15.15, 'CLOTHING', 'Target')
-    print_expense('expense.db')
+    #insert_expense('expense.db', 13.13, 'AUTO', 'Muffler Repair')
+    #insert_expense('expense.db', 14.14, 'FOOD', 'Cub Foods')
+    #insert_expense('expense.db', 15.15, 'CLOTHING', 'Target')
+    #print_expense('expense.db')
 #############################################################################
