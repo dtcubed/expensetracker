@@ -63,7 +63,7 @@ def is_valid_insert_expense_record(transaction_record):
     #####
     # Third list element must be a valid date in the form of: YYYYMMDD 
     #####
-    if not is_valid_YYYYMMDD(transaction_record[2], debugging=True):
+    if not is_valid_YYYYMMDD(transaction_record[2]):
         return False
 
     return True
@@ -75,8 +75,7 @@ def is_valid_YYYYMMDD(proposed_datestamp):
     # a datestamp fitting into the following range will "match":
     #   20000000 through 29991239. 
     # Of couse, since we all know there are invalid dates in that range, 
-    # further processing is necessary. I just felt the need to put a Perl 
-    # regexp into this routine.
+    # further processing is necessary.
     #####
     regexp = re.compile('^2[0-9]{3}[0-1][0-2][0-3][0-9]$')
 
