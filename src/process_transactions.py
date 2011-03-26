@@ -30,6 +30,7 @@ import os
 import re
 
 from sys import argv, exit
+import time
 #############################################################################
 def is_valid_insert_category_record(transaction_record):
     #####
@@ -62,22 +63,40 @@ def is_valid_insert_expense_record(transaction_record):
     #####
     # Third list element must be a valid date in the form of: YYYYMMDD 
     #####
-    if not is_valid_yyyymmdd(transaction_record[2]):
+    if not is_valid_YYYYMMDD(transaction_record[2], debugging=True):
         return False
 
     return True
 #############################################################################
-# TODO: Do in-depth checking here to ensure that this date is really a valid
-#       date on the calendar, not just that the formatting conforms.
-#############################################################################
-def is_valid_yyyymmdd(a_string):
+def is_valid_YYYYMMDD(proposed_datestamp):
     #####
-    # Use Perl style regexp here.
+    # First, we are going to constrain the possible values that we are 
+    # willing to accept using a Perl style regexp. For the following regexp,
+    # a datestamp fitting into the following range will "match":
+    #   20000000 through 29991239. 
+    # Of couse, since we all know there are invalid dates in that range, 
+    # further processing is necessary. I just felt the need to put a Perl 
+    # regexp into this routine.
     #####
     regexp = re.compile('^2[0-9]{3}[0-1][0-2][0-3][0-9]$')
 
-    if regexp.match(a_string):
-        return True
+    if regexp.match(proposed_datestamp):
+        #####
+        # A Google search on "python date validation" reflects several 
+        # examples of using this technique to ensure that the proposed 
+        # datestamp reflects a proper calendar date.
+        #####
+        try:
+            time.strptime(proposed_datestamp, '%Y%m%d')
+        except ValueError:
+            #####
+            # The ValueError exception should be thrown for invalid months
+            # and days within a month. For example, 20110229, since there
+            # is no 29th of February for 2011.
+            #####
+            return False
+        else:
+            return True
 
     return False
 #############################################################################
