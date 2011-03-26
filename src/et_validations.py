@@ -22,11 +22,31 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 #  THE SOFTWARE.
 #############################################################################
+
 #####
-# Perl style regexp capability.
+# Perl style regexp capability. Nice!
 #####
 import re
+
 import time
+#############################################################################
+def is_valid_amount(proposed_amount, debugging=False):
+    #####
+    # We will insist that an "amount" be a decimal value with at least one (1)
+    # numeric value before the decimal place and exactly two (2) decimal places 
+    # specified.
+    #####
+    regexp = re.compile('^\d+\.\d{2}$')
+
+    if regexp.match(proposed_amount):
+        if debugging:
+            print "Returning True for proposed amount:[", proposed_amount, "]"
+        return True
+
+    if debugging:
+        print "Returning False for proposed amount:[", proposed_amount, "]"
+
+    return False
 #############################################################################
 def is_valid_YYYYMMDD(proposed_datestamp):
     #####
