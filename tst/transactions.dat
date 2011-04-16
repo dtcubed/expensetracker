@@ -1,10 +1,10 @@
-I,C,NONE,,Uncategorized
-I,C,DFOOD,,Discretionary Restaurant
-I,C,DENT,,Discretionary Entertainment
-I,C,HOUSE,,House Top Level Category
-I,C,HMMRTG,HOUSE,Mortgage Payment
-I,C,HMOWNRINS,HOUSE,Home Owner Insurance
-I,C,HMMAINT,HOUSE,Home Maintenance
+#I,C,NONE,,Uncategorized
+#I,C,DFOOD,,Discretionary Restaurant
+#I,C,DENT,,Discretionary Entertainment
+#I,C,HOUSE,,House Top Level Category
+#I,C,HMMRTG,HOUSE,Mortgage Payment
+#I,C,HMOWNRINS,HOUSE,Home Owner Insurance
+#I,C,HMMAINT,HOUSE,Home Maintenance
 I,E,20110113,13.13,DFOOD,Applebee's
 I,E,20110114,89.01,DFOOD,Red Lobster
 I,E,20110115,14.99,DENT,Movies
