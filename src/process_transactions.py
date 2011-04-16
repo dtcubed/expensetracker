@@ -22,33 +22,47 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 #  THE SOFTWARE.
 #############################################################################
+import argparse
 import csv 
 import os
-from sys import argv, exit
+
+from sys import exit
 
 #####
 # ET modules.
 #####
-from rdbms import insert_expense_transaction, insert_category_transaction
+from et_rdbms import create_et_db_if_necessary
+from et_transactions import insert_expense_transaction, insert_category_transaction
 #############################################################################
 def main():
-    sqlite_db = argv[1]
+    parser = argparse.ArgumentParser(description='Process ExpenseTracker Transactions.')
+    parser.add_argument('--create_db', dest='create_db', default=0, type=int, choices=[0, 1])
+    parser.add_argument('--debug', dest='debug', default=0, type=int, choices=[0, 1])
+    parser.add_argument('--sqlite_db', dest='sqlite_db_file', required=True)
+    parser.add_argument('--transactions', dest='transactions_file', required=True)
+    args = parser.parse_args()
+
     #####
     # Before continuing, check for existence.
     #####
-    if not os.path.exists(sqlite_db):
-        print "\nSQLite DB: [", sqlite_db, "] does not exist. Exiting.\n" 
-        exit()
+    if not os.path.exists(args.sqlite_db_file):
+        #####
+        # If the CLI flag is set, be willing to create the sqlite database. 
+        #####
+        if args.create_db:
+            create_et_db_if_necessary(args.sqlite_db_file)
+        else:
+            print "\nSQLite DB: [", args.sqlite_db_file, "] does not exist. Exiting.\n" 
+            exit()
 
-    transactions_file = argv[2]
     #####
     # Before continuing, check for existence.
     #####
-    if not os.path.exists(transactions_file):
-        print "\nTransactions File: [", transactions_file, "] does not exist. Exiting.\n" 
+    if not os.path.exists(args.transactions_file):
+        print "\nTransactions File: [", args.transactions_file, "] does not exist. Exiting.\n" 
         exit()
 
-    transactionReader = csv.reader(open(transactions_file, 'rb'))
+    transactionReader = csv.reader(open(args.transactions_file, 'rb'))
 
     #####
     # Each row is really a list of strings as parsed by the csv reader.
@@ -60,10 +74,10 @@ def main():
         if transaction[0] == 'I':
             if transaction[1] == 'C':
                 print "INSERT->Category"
-                insert_category_transaction(sqlite_db, transaction)
+                insert_category_transaction(args.sqlite_db_file, transaction)
             elif transaction[1] == 'E':
                 print "INSERT->Expense"
-                insert_expense_transaction(sqlite_db, transaction)
+                insert_expense_transaction(args.sqlite_db_file, transaction)
         #####
         # UPDATE record.
         #####
